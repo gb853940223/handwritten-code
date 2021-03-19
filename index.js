@@ -103,3 +103,40 @@ Function.prototype.myBind = function (context = globalThis) {
   // 支持 new 调用方式newFunc.prototype = Object.create(fn.prototype)
   return newFunc;
 }
+/**
+ * call
+ * @param {context} 
+ * @return {any}
+ */
+Function.prototype.myCall = function (context = globalThis) {
+  // 关键步骤，在 context 上调用方法，触发 this 绑定为 context，
+  // 使用 Symbol 防止原有属性的覆盖
+  const key = Symbol('key');
+  context[key] = this;
+  let args = arguments.slice(1);
+  let res = context[key](...args);
+  delete context[key]
+  return res;
+};
+
+
+
+
+
+
+
+/**
+ * setTimeout
+ * @param {context} 
+ * @return {fn}
+ */
+function setTimeout(fn, timer) {
+  const cur = new Date().getTime();
+  while (true) {
+    const now = new Date().getTime();
+    if (now - cur >= timer) {
+      fn();
+      break;
+    }
+  }
+}
